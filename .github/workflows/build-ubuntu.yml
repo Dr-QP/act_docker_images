@@ -17,6 +17,10 @@ on:
       - 'build.ps1'
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: true
+
 env:
   IMAGE_LABEL_OWNER: ${{ github.repository_owner }}
   IMAGE_LABEL_REPO: ${{ github.repository }}

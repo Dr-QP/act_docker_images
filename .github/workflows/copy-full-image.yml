@@ -9,6 +9,10 @@ on:
   schedule:
     - cron: 0 12 */7 * *
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: true
+
 env:
   SLUG: ${{ github.repository_owner }}/act-ubuntu
   PUSH_GHCR: ${{ github.repository == (github.event.pull_request.head.repo.full_name || github.repository) && '1' || '' }}
@@ -18,7 +22,6 @@ env:
 defaults:
   run:
     shell: sh
-
 jobs:
   copy:
     name: copy image ${{ matrix.copy.src }}
