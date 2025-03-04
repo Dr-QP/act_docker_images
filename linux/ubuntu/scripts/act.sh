@@ -123,23 +123,13 @@ printf "\n\t🐋 Installed moby-buildx 🐋\t\n"
 docker buildx version
 IFS=' ' read -r -a NODE <<<"$NODE_VERSION"
 for ver in "${NODE[@]}"; do
-  printf "\n\t🐋 Installing Node.JS=%s 🐋\t\n" "${ver}"
-  VER=$(curl https://nodejs.org/download/release/index.json | jq "[.[] | select(.version|test(\"^v${ver}\"))][0].version" -r)
-  NODEPATH="${ACT_TOOLSDIRECTORY}/node/${VER:1}/$(node_arch)"
-  mkdir -v -m 0777 -p "$NODEPATH"
-  wget "https://nodejs.org/download/release/latest-v${ver}.x/node-$VER-linux-$(node_arch).tar.xz" -O "node-$VER-linux-$(node_arch).tar.xz"
-  tar -Jxf "node-$VER-linux-$(node_arch).tar.xz" --strip-components=1 -C "$NODEPATH"
-  rm "node-$VER-linux-$(node_arch).tar.xz"
-  if [[ "${ver}" == "18" ]]; then  # make this version the default (latest LTS)
-    sed "s|^PATH=|PATH=$NODEPATH/bin:|mg" -i /etc/environment
-  fi
-  export PATH="$NODEPATH/bin:$PATH"
+  curl -sL https://deb.nodesource.com/setup_${ver}.x -o nodesource_setup.sh
+  sudo bash nodesource_setup.sh
+  rm "nodesource_setup.sh"
 
-  printf "\n\t🐋 Installed Node.JS 🐋\t\n"
-  "${NODEPATH}"/bin/node -v
-
-  printf "\n\t🐋 Installed NPM 🐋\t\n"
-  "${NODEPATH}"/bin/npm -v
+  # The NodeSource nodejs package contains both the node binary and npm, so you don’t need to install npm separately.
+  apt-get install -y -q --no-install-recommends nodejs
+  npm install -g yarn
 done
 
 case "$(uname -m)" in
