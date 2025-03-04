@@ -72,7 +72,7 @@ jobs:
           chmod +x crun
           sudo cp crun /usr/local/bin/crun
           echo "BUILDAH_RUNTIME=/usr/local/bin/crun" >> $GITHUB_ENV
-          git clone https://passt.top/passt
+          git clone https://git.phyllo.me/External/passt # https://passt.top/passt
           make -C passt
           sudo make -C passt install
       - name: Force SLUG to lowercase
@@ -264,7 +264,7 @@ jobs:
           chmod +x crun
           sudo cp crun /usr/local/bin/crun
           echo "BUILDAH_RUNTIME=/usr/local/bin/crun" >> $GITHUB_ENV
-          git clone https://passt.top/passt
+          git clone https://git.phyllo.me/External/passt # https://passt.top/passt
           make -C passt
           sudo make -C passt install
       - name: Cleanup
